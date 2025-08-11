@@ -589,7 +589,7 @@ export const GameAnalysisDashboard = () => {
   return <div className="min-h-screen p-6 bg-blue-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8 text-center">
+        <div className="mb-8 text-center bg-blue-300">
           <h1 className="text-3xl font-bold text-dashboard-header mb-4">
             游戏数据分析对比平台
           </h1>
