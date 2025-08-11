@@ -237,49 +237,127 @@ const getTagColor = (tag: string, tableIndex: number): string => {
   return tagColors[colorIndex];
 };
 
-interface TagDisplayProps {
+// 获取所有表格中某个维度的所有可能的key
+const getAllKeysInDimension = (allTableData: TableData[], dimension: keyof Omit<TableData, 'tableName'>): string[] => {
+  const allKeys = new Set<string>();
+  
+  allTableData.forEach(tableData => {
+    const data = tableData[dimension] as GameAnalysisData;
+    Object.keys(data).forEach(key => allKeys.add(key));
+  });
+  
+  return Array.from(allKeys).sort();
+};
+
+// 获取某个主分类下的所有子分类
+const getAllSubKeysInCategory = (allTableData: TableData[], dimension: keyof Omit<TableData, 'tableName'>, category: string): string[] => {
+  const allSubKeys = new Set<string>();
+  
+  allTableData.forEach(tableData => {
+    const data = tableData[dimension] as GameAnalysisData;
+    const categoryData = data[category];
+    if (categoryData && !Array.isArray(categoryData)) {
+      Object.keys(categoryData).forEach(subKey => allSubKeys.add(subKey));
+    }
+  });
+  
+  return Array.from(allSubKeys).sort();
+};
+
+interface AlignedTagDisplayProps {
   data: GameAnalysisData;
   tableIndex: number;
+  allTableData: TableData[];
+  dimension: keyof Omit<TableData, 'tableName'>;
 }
 
-const TagDisplay: React.FC<TagDisplayProps> = ({ data, tableIndex }) => {
-  const renderTags = () => {
-    const tags: JSX.Element[] = [];
+const AlignedTagDisplay: React.FC<AlignedTagDisplayProps> = ({ data, tableIndex, allTableData, dimension }) => {
+  // 获取该维度下所有可能的主分类key
+  const allMainKeys = getAllKeysInDimension(allTableData, dimension);
+  
+  const renderAlignedStructure = () => {
+    const sections: JSX.Element[] = [];
     
-    Object.entries(data).forEach(([category, subcategories]) => {
-      if (Array.isArray(subcategories)) {
-        // 直接是标签数组，显示分类名: 标签值
-        subcategories.forEach((tag, index) => {
-          tags.push(
-            <Badge 
-              key={`${category}-${index}`} 
-              className={`${getTagColor(tag, tableIndex)} mr-1 mb-1 text-xs`}
-            >
-              {category}: {tag}
-            </Badge>
-          );
-        });
+    allMainKeys.forEach(mainKey => {
+      const categoryData = data[mainKey];
+      
+      if (!categoryData) {
+        // 如果当前表没有这个主分类，显示空白占位
+        sections.push(
+          <div key={mainKey} className="mb-3">
+            <div className="text-sm font-medium text-muted-foreground mb-1">{mainKey}</div>
+            <div className="min-h-[32px] text-xs text-muted-foreground italic">
+              暂无数据
+            </div>
+          </div>
+        );
+        return;
+      }
+
+      if (Array.isArray(categoryData)) {
+        // 直接是标签数组
+        sections.push(
+          <div key={mainKey} className="mb-3">
+            <div className="text-sm font-medium text-foreground mb-1">{mainKey}</div>
+            <div className="flex flex-wrap">
+              {categoryData.map((tag, index) => (
+                <Badge 
+                  key={`${mainKey}-${index}`} 
+                  className={`${getTagColor(tag, tableIndex)} mr-1 mb-1 text-xs`}
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        );
       } else {
-        // 有子分类，显示 子分类: 标签值
-        Object.entries(subcategories).forEach(([subCategory, tagList]) => {
-          tagList.forEach((tag, index) => {
-            tags.push(
-              <Badge 
-                key={`${category}-${subCategory}-${index}`} 
-                className={`${getTagColor(tag, tableIndex)} mr-1 mb-1 text-xs`}
-              >
-                {subCategory}: {tag}
-              </Badge>
-            );
-          });
-        });
+        // 有子分类的情况
+        const allSubKeys = getAllSubKeysInCategory(allTableData, dimension, mainKey);
+        
+        sections.push(
+          <div key={mainKey} className="mb-3">
+            <div className="text-sm font-medium text-foreground mb-1">{mainKey}</div>
+            {allSubKeys.map(subKey => {
+              const subCategoryData = categoryData[subKey];
+              
+              if (!subCategoryData) {
+                // 子分类不存在，显示占位
+                return (
+                  <div key={subKey} className="mb-2">
+                    <div className="text-xs text-muted-foreground mb-1 ml-2">{subKey}</div>
+                    <div className="min-h-[24px] ml-2 text-xs text-muted-foreground italic">
+                      暂无数据
+                    </div>
+                  </div>
+                );
+              }
+              
+              return (
+                <div key={subKey} className="mb-2">
+                  <div className="text-xs text-muted-foreground mb-1 ml-2">{subKey}</div>
+                  <div className="flex flex-wrap ml-2">
+                    {subCategoryData.map((tag, index) => (
+                      <Badge 
+                        key={`${mainKey}-${subKey}-${index}`} 
+                        className={`${getTagColor(tag, tableIndex)} mr-1 mb-1 text-xs`}
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
       }
     });
     
-    return tags;
+    return sections;
   };
 
-  return <div className="flex flex-wrap">{renderTags()}</div>;
+  return <div>{renderAlignedStructure()}</div>;
 };
 
 interface DimensionSectionProps {
@@ -303,9 +381,11 @@ const DimensionSection: React.FC<DimensionSectionProps> = ({ title, data, dimens
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-              <TagDisplay 
+              <AlignedTagDisplay 
                 data={tableData[dimension] as GameAnalysisData} 
                 tableIndex={index}
+                allTableData={data}
+                dimension={dimension}
               />
             </CardContent>
           </Card>
