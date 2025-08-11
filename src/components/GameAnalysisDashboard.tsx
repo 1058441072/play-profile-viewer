@@ -248,19 +248,19 @@ const TagDisplay: React.FC<TagDisplayProps> = ({ data, tableIndex }) => {
     
     Object.entries(data).forEach(([category, subcategories]) => {
       if (Array.isArray(subcategories)) {
-        // 直接是标签数组
+        // 直接是标签数组，显示分类名: 标签值
         subcategories.forEach((tag, index) => {
           tags.push(
             <Badge 
               key={`${category}-${index}`} 
               className={`${getTagColor(tag, tableIndex)} mr-1 mb-1 text-xs`}
             >
-              {tag}
+              {category}: {tag}
             </Badge>
           );
         });
       } else {
-        // 有子分类
+        // 有子分类，显示 子分类: 标签值
         Object.entries(subcategories).forEach(([subCategory, tagList]) => {
           tagList.forEach((tag, index) => {
             tags.push(
@@ -268,7 +268,7 @@ const TagDisplay: React.FC<TagDisplayProps> = ({ data, tableIndex }) => {
                 key={`${category}-${subCategory}-${index}`} 
                 className={`${getTagColor(tag, tableIndex)} mr-1 mb-1 text-xs`}
               >
-                {tag}
+                {subCategory}: {tag}
               </Badge>
             );
           });
