@@ -52,6 +52,21 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				tag: {
+					table1: 'hsl(var(--tag-table1))',
+					table2: 'hsl(var(--tag-table2))',
+					table3: 'hsl(var(--tag-table3))',
+					table4: 'hsl(var(--tag-table4))',
+					purple: 'hsl(var(--tag-purple))',
+					orange: 'hsl(var(--tag-orange))',
+					teal: 'hsl(var(--tag-teal))',
+					indigo: 'hsl(var(--tag-indigo))'
+				},
+				dashboard: {
+					header: 'hsl(var(--dashboard-header))',
+					section: 'hsl(var(--section-bg))',
+					dimension: 'hsl(var(--dimension-header))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

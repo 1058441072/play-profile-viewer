@@ -8,33 +8,50 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 248 250 252;
+    --foreground: 213 27% 16%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 213 27% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 213 27% 16%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 241 5% 96%;
+    --secondary-foreground: 213 27% 16%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 246 5% 95%;
+    --muted-foreground: 215 14% 64%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 246 5% 95%;
+    --accent-foreground: 213 27% 16%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 239 84% 67%;
+
+    /* Tag colors for different tables */
+    --tag-table1: 338 92% 70%;
+    --tag-table2: 200 98% 64%;
+    --tag-table3: 142 71% 45%;
+    --tag-table4: 45 93% 61%;
+    
+    /* Additional tag colors for variety */
+    --tag-purple: 258 90% 66%;
+    --tag-orange: 25 95% 53%;
+    --tag-teal: 175 84% 39%;
+    --tag-indigo: 239 68% 68%;
+    
+    /* Dashboard specific colors */
+    --dashboard-header: 213 27% 8%;
+    --section-bg: 0 0% 99%;
+    --dimension-header: 216 19% 27%;
 
     --radius: 0.5rem;
 
